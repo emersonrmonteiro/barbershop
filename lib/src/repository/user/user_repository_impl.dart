@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:barbershop/src/core/exceptions/auth_exception.dart';
+import 'package:barbershop/src/core/exceptions/repository_exception.dart';
 import 'package:barbershop/src/core/function_program/either.dart';
-import 'package:barbershop/src/core/ui/rest_client/rest_client.dart';
-import 'package:barbershop/src/repository/user_repository.dart';
+import 'package:barbershop/src/core/rest_client/rest_client.dart';
+import 'package:barbershop/src/model/user_model.dart';
+import 'package:barbershop/src/repository/user/user_repository.dart';
 import 'package:dio/dio.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -35,6 +37,21 @@ class UserRepositoryImpl implements UserRepository {
       }
       log('Erro ao realizar login', error: e, stackTrace: s);
       return Failure(AuthError(message: 'Erro ao realizar login'));
+    }
+  }
+
+  @override
+  Future<Either<RepositoryException, UserModel>> me() async {
+    try {
+      final Response(:data) = await restClient.auth.get('/me');
+      return Success(UserModel.fromMap(data));
+    } on DioException catch (e, s) {
+      log('Erro ao buscar usuário logado', error: e, stackTrace: s);
+      return Failure(
+          RepositoryException(message: 'Erro ao buscar usuário logado'));
+    } on ArgumentError catch (e, s) {
+      log('Inválid json', error: e, stackTrace: s);
+      return Failure(RepositoryException(message: e.message));
     }
   }
 }

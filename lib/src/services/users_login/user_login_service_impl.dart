@@ -3,7 +3,7 @@ import 'package:barbershop/src/core/exceptions/auth_exception.dart';
 import 'package:barbershop/src/core/exceptions/service_exception.dart';
 import 'package:barbershop/src/core/function_program/either.dart';
 import 'package:barbershop/src/core/function_program/nil.dart';
-import 'package:barbershop/src/repository/user_repository.dart';
+import 'package:barbershop/src/repository/user/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'user_login_service.dart';
